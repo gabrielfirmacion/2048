@@ -10,7 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
-
+import com.skillz.Skillz;
 import java.util.ArrayList;
 
 @SuppressWarnings("deprecation")
@@ -71,8 +71,8 @@ public class MainView extends View {
     private int titleWidthScore;
 
     public MainView(Context context) {
-        super(context);
 
+        super(context);
         Resources resources = context.getResources();
         //Loading resources
         game = new MainGame(context, this);

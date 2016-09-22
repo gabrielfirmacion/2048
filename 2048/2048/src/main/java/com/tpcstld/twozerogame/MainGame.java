@@ -1,12 +1,19 @@
 package com.tpcstld.twozerogame;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import android.util.Log;
+
+import com.skillz.Skillz;
+
 
 public class MainGame {
 
@@ -49,6 +56,7 @@ public class MainGame {
         mContext = context;
         mView = view;
         endingMaxValue = (int) Math.pow(2, view.numCellTypes - 1);
+        Log.d("mytag", "MAIN GAME IS CALLED");
     }
 
     public void newGame() {
@@ -82,7 +90,9 @@ public class MainGame {
 
     private void addRandomTile() {
         if (grid.isCellsAvailable()) {
-            int value = Math.random() < 0.9 ? 2 : 4;
+
+            // Used Skillz Random Next Float
+            int value = Skillz.getRandom().nextFloat() < 0.9 ? 2 : 4;
             Tile tile = new Tile(grid.randomAvailableCell(), value);
             spawnTile(tile);
         }
@@ -201,6 +211,11 @@ public class MainGame {
 
                         // Update the score
                         score = score + merged.getValue();
+
+                        // Updating score to Skillz
+                        if (Skillz.isMatchInProgress()) {
+                            Skillz.updatePlayersCurrentScore(GameActivity.sInstance, new BigDecimal(score));
+                        }
                         highScore = Math.max(score, highScore);
 
                         // The mighty 2048 tile
@@ -242,6 +257,12 @@ public class MainGame {
         if (score >= highScore) {
             highScore = score;
             recordHighScore();
+        }
+
+        // Reporting Final Score to Skillz
+        if (Skillz.isMatchInProgress()) {
+            Skillz.reportScore(GameActivity.sInstance, new BigDecimal(score));
+            GameActivity.sInstance.finish();
         }
     }
 
